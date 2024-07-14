@@ -39,11 +39,11 @@ const adminData = __importStar(require("../data/Member"));
 function createMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const newAdminInfo = req.body;
-        const insertId = yield adminData.createMember(newAdminInfo);
-        res.status(201).json({ insertId: insertId });
+        const result = yield adminData.createMember(newAdminInfo);
+        res.status(201).json(result);
     });
 }
-//모든 admin user 들을 배열로 전송하도록 설계
+// 모든 admin user 들을 배열로 전송하도록 설계
 function getMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const adminInfo = yield adminData.getMember();
