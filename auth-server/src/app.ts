@@ -1,19 +1,16 @@
-import express, { Request, Response } from 'express';
+
+import express from "express";
+import adminRouter from "./routes/Member";
+
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-type Data = {
-    name: string;
-    age: number;
-};
+app.use("/admin", adminRouter);
 
-const sendData: Data = {
-    name: 'test',
-    age: 25,
-};
-
-app.get('/get', (req: Request, res: Response) => {
-    res.send(sendData);
+app.listen(8000, () => {
+  console.log("**----------------------------------**");
+  console.log("====      Server is On...!!!      ====");
+  console.log("**----------------------------------**");
 });
-
-app.listen(8090)

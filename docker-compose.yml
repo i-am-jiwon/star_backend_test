@@ -2,14 +2,13 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:9.0.0
+    image: mysql:8.0 # 또는 최신 안정 버전
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_CHARSET: utf8
-      MYSQL_COLLATION: utf8_unicode_ci
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "${DB_PORT}:3306"
