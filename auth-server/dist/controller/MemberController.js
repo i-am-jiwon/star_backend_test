@@ -40,7 +40,12 @@ function createMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const newAdminInfo = req.body;
         const result = yield adminData.createMember(newAdminInfo);
-        res.status(201).json(result);
+        if (result.success) {
+            res.status(201).json(result);
+        }
+        else {
+            res.status(409).json({ message: result.message }); // HTTP 409 Conflict 상태 코드 사용
+        }
     });
 }
 // 모든 admin user 들을 배열로 전송하도록 설계
