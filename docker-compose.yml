@@ -5,9 +5,11 @@ services:
     image: mysql:9.0.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: test_db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_CHARSET: utf8
+      MYSQL_COLLATION: utf8_unicode_ci
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3000:3306"
+      - "${DB_PORT}:3306"
