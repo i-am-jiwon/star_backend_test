@@ -31,4 +31,6 @@ const memberController = __importStar(require("../controller/MemberController"))
 const router = express_1.default.Router();
 router.get("/member", memberController.getMember);
 router.post("/member", memberController.createMember);
+router.get('/member/:id', memberController.getMemberById);
+router.post("/login", memberController.handleUserLogin);
 exports.default = router;

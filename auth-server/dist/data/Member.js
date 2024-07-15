@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMember = createMember;
 exports.getMember = getMember;
+exports.getMemberById = getMemberById;
 const database_1 = require("./database");
 function createMember(newAdminInfo) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -49,5 +50,17 @@ function getMember() {
         const [rows] = yield database_1.db.execute(query);
         // 결과 반환
         return rows;
+    });
+}
+function getMemberById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield database_1.db.query('SELECT * FROM users WHERE id = ?', [id]);
+            return rows.length ? rows[0] : null;
+        }
+        catch (error) {
+            console.error('Error fetching user by ID:', error);
+            throw error;
+        }
     });
 }

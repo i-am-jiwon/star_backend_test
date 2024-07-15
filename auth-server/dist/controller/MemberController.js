@@ -34,7 +34,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMember = createMember;
 exports.getMember = getMember;
+exports.getMemberById = getMemberById;
+exports.handleUserLogin = handleUserLogin;
 const adminData = __importStar(require("../data/Member"));
+const userSession_1 = require("../data/userSession");
+const jwt_1 = require("../jwt/jwt");
 // 생성 후 insertId를 리턴하도록 설계
 function createMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -53,5 +57,55 @@ function getMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const adminInfo = yield adminData.getMember();
         res.send(adminInfo);
+    });
+}
+// 특정 회원 정보를 가져오는 함수
+function getMemberById(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { id } = req.params;
+        const user = yield adminData.getMemberById(id);
+        if (user) {
+            res.status(200).json(user);
+        }
+        else {
+            res.status(404).json({ message: "User not found" });
+        }
+    });
+}
+// function for handle user login
+function handleUserLogin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // user가 입력한 email, password를 변수로 저장
+        const { id, password } = req.body;
+        // email을 통해 user 정보 접근
+        const user = yield adminData.getMemberById(id);
+        // 만약 db에 password와 id 정보가 없다면 401 리턴
+        if (!user) {
+            return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
+        }
+        else if (user.password !== password) {
+            return res.status(401).send("비밀번호가 유효하지 않습니다.");
+        }
+        // 입력한 email을 통해 session 생성
+        const session = (0, userSession_1.createSession)(id);
+        // access token과 refresh token 생성
+        // access token과 refresh token의 만료 주기는 각각 5분, 1년으로 설정
+        const accessToken = (0, jwt_1.signJWT)({
+            id: user.id, sessionId: session.sessionId
+        }, "5s");
+        const refreshToken = (0, jwt_1.signJWT)({
+            sessionId: session.sessionId
+        }, "1y");
+        // 쿠키에 accessToken과 refreshToken을 담음
+        res.cookie("accessToken", accessToken, {
+            maxAge: 300000, // 5분
+            httpOnly: true,
+        });
+        res.cookie("refreshToken", refreshToken, {
+            maxAge: 3.154e10, // 1년
+            httpOnly: true,
+        });
+        // 유저에게 session 반환
+        return res.status(200).send(session);
     });
 }

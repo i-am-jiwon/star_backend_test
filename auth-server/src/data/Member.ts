@@ -1,5 +1,6 @@
 import { db } from "./database";
 import { PostMember, GetMember } from "../models/User";
+import { RowDataPacket } from 'mysql2';
 
 export async function createMember(newAdminInfo: PostMember) {
   const { id, password, salt, name, email, depart, duty, role } = newAdminInfo;
@@ -40,4 +41,14 @@ export async function getMember(): Promise<Array<GetMember>> {
 
   // 결과 반환
   return rows as GetMember[];
+}
+
+export async function getMemberById(id: string): Promise<RowDataPacket | null> {
+  try {
+    const [rows] = await db.query<RowDataPacket[]>('SELECT * FROM users WHERE id = ?', [id]);
+    return rows.length ? rows[0] : null;
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    throw error;
+  }
 }

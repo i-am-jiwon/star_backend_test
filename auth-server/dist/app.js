@@ -8,7 +8,7 @@ const Member_1 = __importDefault(require("./routes/Member"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use("/admin", Member_1.default);
+app.use("/api", Member_1.default);
 app.listen(8000, () => {
     console.log("**----------------------------------**");
     console.log("====      Server is On...!!!      ====");
