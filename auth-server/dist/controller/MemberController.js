@@ -39,15 +39,16 @@ exports.createMember = createMember;
 exports.getMember = getMember;
 exports.getMemberById = getMemberById;
 exports.handleUserLogin = handleUserLogin;
-const adminData = __importStar(require("../data/Member"));
+const memberData = __importStar(require("../data/Member"));
 const userSession_1 = require("../data/userSession");
 const jwt_1 = require("../jwt/jwt");
 const crypto_1 = __importDefault(require("crypto"));
+
 // 생성 후 insertId를 리턴하도록 설계
 function createMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const newAdminInfo = req.body;
-        const result = yield adminData.createMember(newAdminInfo);
+        const newMemberInfo = req.body;
+        const result = yield memberData.createMember(newMemberInfo);
         if (result.success) {
             res.status(201).json(result);
         }
@@ -56,18 +57,20 @@ function createMember(req, res) {
         }
     });
 }
-// 모든 admin user 들을 배열로 전송하도록 설계
+
+// 모든 user 들을 배열로 전송하도록 설계
 function getMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const adminInfo = yield adminData.getMember();
-        res.send(adminInfo);
+        const memberInfo = yield memberData.getMember();
+        res.send(memberInfo);
     });
 }
+
 // 특정 회원 정보를 가져오는 함수
 function getMemberById(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id } = req.params;
-        const user = yield adminData.getMemberById(id);
+        const user = yield memberData.getMemberById(id);
         if (user) {
             res.status(200).json(user);
         }
@@ -80,7 +83,7 @@ function getMemberById(req, res) {
 function handleUserLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id, password } = req.body;
-        const user = yield adminData.getMemberById(id);
+        const user = yield memberData.getMemberById(id);
         if (!user) {
             return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
         }

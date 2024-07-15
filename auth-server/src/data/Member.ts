@@ -1,4 +1,4 @@
-import { db } from "./database";
+import { db } from "../config/database";
 import { PostMember, GetMember } from "../models/User";
 import { RowDataPacket } from 'mysql2';
 import crypto from 'crypto';

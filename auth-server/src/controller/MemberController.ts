@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PostMember, GetMember } from "../models/User";
-import * as adminData from "../data/Member";
+import * as memberData from "../data/Member";
 
 import { createSession } from "../data/userSession";
 import { signJWT } from "../jwt/jwt";
@@ -8,8 +8,8 @@ import crypto from 'crypto';
 
 // 생성 후 insertId를 리턴하도록 설계
 export async function createMember(req: Request, res: Response) {
-  const newAdminInfo: PostMember = req.body;
-  const result = await adminData.createMember(newAdminInfo);
+  const newMemberInfo: PostMember = req.body;
+  const result = await memberData.createMember(newMemberInfo);
 
   if (result.success) {
     res.status(201).json(result);
@@ -18,16 +18,16 @@ export async function createMember(req: Request, res: Response) {
   }
 }
 
-// 모든 admin user 들을 배열로 전송하도록 설계
+// 모든 member user 들을 배열로 전송하도록 설계
 export async function getMember(req: Request, res: Response) {
-  const adminInfo: Array<GetMember> = await adminData.getMember();
-  res.send(adminInfo);
+  const memberInfo: Array<GetMember> = await memberData.getMember();
+  res.send(memberInfo);
 }
 
 // 특정 회원 정보를 가져오는 함수
 export async function getMemberById(req: Request, res: Response) {
   const { id } = req.params;
-  const user = await adminData.getMemberById(id);
+  const user = await memberData.getMemberById(id);
 
   if (user) {
     res.status(200).json(user);
@@ -40,7 +40,7 @@ export async function getMemberById(req: Request, res: Response) {
 export async function handleUserLogin(req: Request, res: Response, next: NextFunction) {
 
   const { id, password } = req.body;
-  const user = await adminData.getMemberById(id);
+  const user = await memberData.getMemberById(id);
 
 
   if (!user) {
@@ -55,11 +55,12 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
     return res.status(401).send("비밀번호가 유효하지 않습니다.");
   }
 
-  const session = createSession(id);
 
   const accessToken = signJWT({
-    id: user.id, sessionId: session.sessionId
-  }, "5s")
+    id: user.id, role: user.role
+  }, "60s")
+
+  const session = createSession(id, accessToken);
 
   const refreshToken = signJWT({
     sessionId: session.sessionId
