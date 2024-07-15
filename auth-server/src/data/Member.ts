@@ -4,9 +4,10 @@ import { RowDataPacket } from 'mysql2';
 import crypto from 'crypto';
 
 export async function createMember(newAdminInfo: PostMember) {
-  const { id, password, salt, name, role } = newAdminInfo;
+  const { id, password, name, role } = newAdminInfo;
 
   // Salt 생성
+  const salt = crypto.randomBytes(16).toString('hex');
 
   // 비밀번호 해시화
   const hashedPassword = crypto

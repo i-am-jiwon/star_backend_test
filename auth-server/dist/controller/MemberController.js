@@ -80,7 +80,7 @@ function getMemberById(req, res) {
 function handleUserLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         // user가 입력한 email, password를 변수로 저장
-        const { id, password, salt } = req.body;
+        const { id, password } = req.body;
         // email을 통해 user 정보 접근
         const user = yield adminData.getMemberById(id);
         // 만약 db에 password와 id 정보가 없다면 401 리턴
@@ -90,12 +90,12 @@ function handleUserLogin(req, res, next) {
         // 입력한 password를 salt와 함께 해시화하여 비교
         const hashedPassword = crypto_1.default
             .createHash('sha256')
-            .update(salt + password) // 저장된 salt와 입력한 비밀번호를 조합
+            .update(user.salt + password) // 저장된 salt와 입력한 비밀번호를 조합
             .digest('hex');
         if (user.password !== hashedPassword) {
             return res.status(401).send("비밀번호가 유효하지 않습니다.");
         }
-        // 입력한 email을 통해 session 생성
+        // 입력한 id 통해 session 생성
         const session = (0, userSession_1.createSession)(id);
         // access token과 refresh token 생성
         // access token과 refresh token의 만료 주기는 각각 5분, 1년으로 설정

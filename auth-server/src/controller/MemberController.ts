@@ -40,7 +40,7 @@ export async function getMemberById(req: Request, res: Response) {
 export async function handleUserLogin(req: Request, res: Response, next: NextFunction) {
 
   // user가 입력한 email, password를 변수로 저장
-  const { id, password, salt } = req.body;
+  const { id, password } = req.body;
 
   // email을 통해 user 정보 접근
   const user = await adminData.getMemberById(id);
@@ -53,7 +53,7 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
   // 입력한 password를 salt와 함께 해시화하여 비교
   const hashedPassword = crypto
     .createHash('sha256')
-    .update(salt + password) // 저장된 salt와 입력한 비밀번호를 조합
+    .update(user.salt + password) // 저장된 salt와 입력한 비밀번호를 조합
     .digest('hex');
 
   if (user.password !== hashedPassword) {

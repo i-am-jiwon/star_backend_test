@@ -19,8 +19,9 @@ const database_1 = require("./database");
 const crypto_1 = __importDefault(require("crypto"));
 function createMember(newAdminInfo) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id, password, salt, name, role } = newAdminInfo;
+        const { id, password, name, role } = newAdminInfo;
         // Salt 생성
+        const salt = crypto_1.default.randomBytes(16).toString('hex');
         // 비밀번호 해시화
         const hashedPassword = crypto_1.default
             .createHash('sha256')
