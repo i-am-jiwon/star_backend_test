@@ -9,12 +9,9 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     salt VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    role FLOAT NOT NULL,
-    email VARCHAR(255),
-    depart VARCHAR(255),
-    duty VARCHAR(255)
+    role FLOAT NOT NULL
 );
 
 INSERT INTO users (id, password, salt, name, role) VALUES
-('starlawfirm', SHA2(CONCAT('star240711', '1234'), 256), '1234', '김스타', 5.0),
-('accept guest', SHA2(CONCAT('guest240711', '1234'), 256), '1234', '게스트', 1.0);
+('starlawfirm', SHA2(CONCAT('1234', 'star240711'), 256), '1234', '김스타', 5.0),
+('accept guest', SHA2(CONCAT('1234', 'guest240711'), 256), '1234', '게스트', 1.0);

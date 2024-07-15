@@ -12,9 +12,10 @@ export async function createMember(newAdminInfo: PostMember) {
   // 비밀번호 해시화
   const hashedPassword = crypto
     .createHash('sha256')
-    .update(salt + password) // salt와 비밀번호를 조합하여 해시화
+    .update(salt + password)
     .digest('hex');
 
+  
   const query = "INSERT INTO users (id, password, salt, name, role) VALUES (?, ?, ?, ?, ?)";
   const values = [id, hashedPassword, salt, name, role];
 

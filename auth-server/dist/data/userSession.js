@@ -4,11 +4,11 @@ exports.userSession = void 0;
 exports.createSession = createSession;
 exports.userSession = {};
 // 유저의 세션 생성
-function createSession(email) {
+function createSession(id) {
     // sessionId 설정
     const sessionId = String(Object.keys(exports.userSession).length + 1);
     // 세션 변수
-    const session = { sessionId, email, valid: true };
+    const session = { sessionId, id, valid: true };
     // 만든 세션을 userSession에 추가
     exports.userSession[sessionId] = session;
     return session;

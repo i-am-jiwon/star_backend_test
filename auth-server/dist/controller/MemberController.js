@@ -79,15 +79,11 @@ function getMemberById(req, res) {
 // function for handle user login
 function handleUserLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        // user가 입력한 email, password를 변수로 저장
         const { id, password } = req.body;
-        // email을 통해 user 정보 접근
         const user = yield adminData.getMemberById(id);
-        // 만약 db에 password와 id 정보가 없다면 401 리턴
         if (!user) {
             return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
         }
-        // 입력한 password를 salt와 함께 해시화하여 비교
         const hashedPassword = crypto_1.default
             .createHash('sha256')
             .update(user.salt + password) // 저장된 salt와 입력한 비밀번호를 조합
@@ -95,17 +91,13 @@ function handleUserLogin(req, res, next) {
         if (user.password !== hashedPassword) {
             return res.status(401).send("비밀번호가 유효하지 않습니다.");
         }
-        // 입력한 id 통해 session 생성
         const session = (0, userSession_1.createSession)(id);
-        // access token과 refresh token 생성
-        // access token과 refresh token의 만료 주기는 각각 5분, 1년으로 설정
         const accessToken = (0, jwt_1.signJWT)({
             id: user.id, sessionId: session.sessionId
         }, "5s");
         const refreshToken = (0, jwt_1.signJWT)({
             sessionId: session.sessionId
         }, "1y");
-        // 쿠키에 accessToken과 refreshToken을 담음
         res.cookie("accessToken", accessToken, {
             maxAge: 300000, // 5분
             httpOnly: true,
@@ -114,7 +106,6 @@ function handleUserLogin(req, res, next) {
             maxAge: 3.154e10, // 1년
             httpOnly: true,
         });
-        // 유저에게 session 반환
         return res.status(200).send(session);
     });
 }
