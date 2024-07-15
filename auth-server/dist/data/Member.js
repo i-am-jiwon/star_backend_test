@@ -8,16 +8,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMember = createMember;
 exports.getMember = getMember;
 exports.getMemberById = getMemberById;
 const database_1 = require("./database");
+const crypto_1 = __importDefault(require("crypto"));
 function createMember(newAdminInfo) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id, password, salt, name, email, depart, duty, role } = newAdminInfo;
-        const query = "INSERT INTO users (id, password, salt, name, email, depart, duty, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        const values = [id, password, salt, name, email || null, depart || null, duty || null, role];
+        const { id, password, salt, name, role } = newAdminInfo;
+        // Salt 생성
+        // 비밀번호 해시화
+        const hashedPassword = crypto_1.default
+            .createHash('sha256')
+            .update(salt + password) // salt와 비밀번호를 조합하여 해시화
+            .digest('hex');
+        const query = "INSERT INTO users (id, password, salt, name, role) VALUES (?, ?, ?, ?, ?)";
+        const values = [id, hashedPassword, salt, name, role];
         try {
             const [result] = yield database_1.db.execute(query, values);
             const insertId = result.insertId;
@@ -26,10 +36,7 @@ function createMember(newAdminInfo) {
                 insertId,
                 id,
                 name,
-                email,
-                depart,
-                duty,
-                role,
+                role
             };
         }
         catch (error) {

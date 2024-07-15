@@ -31,6 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMember = createMember;
 exports.getMember = getMember;
@@ -39,6 +42,7 @@ exports.handleUserLogin = handleUserLogin;
 const adminData = __importStar(require("../data/Member"));
 const userSession_1 = require("../data/userSession");
 const jwt_1 = require("../jwt/jwt");
+const crypto_1 = __importDefault(require("crypto"));
 // 생성 후 insertId를 리턴하도록 설계
 function createMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -76,14 +80,19 @@ function getMemberById(req, res) {
 function handleUserLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         // user가 입력한 email, password를 변수로 저장
-        const { id, password } = req.body;
+        const { id, password, salt } = req.body;
         // email을 통해 user 정보 접근
         const user = yield adminData.getMemberById(id);
         // 만약 db에 password와 id 정보가 없다면 401 리턴
         if (!user) {
             return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
         }
-        else if (user.password !== password) {
+        // 입력한 password를 salt와 함께 해시화하여 비교
+        const hashedPassword = crypto_1.default
+            .createHash('sha256')
+            .update(salt + password) // 저장된 salt와 입력한 비밀번호를 조합
+            .digest('hex');
+        if (user.password !== hashedPassword) {
             return res.status(401).send("비밀번호가 유효하지 않습니다.");
         }
         // 입력한 email을 통해 session 생성

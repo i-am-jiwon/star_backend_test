@@ -13,8 +13,6 @@ dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env
 // jwt sign과 verify를 위한 secret key
 const PRIVATE_KEY = fs_1.default.readFileSync('./private.key', 'utf8');
 const PUBLIC_KEY = fs_1.default.readFileSync('./public.key', 'utf8');
-console.log("Private Key:", PRIVATE_KEY);
-console.log("Public Key:", PUBLIC_KEY);
 function signJWT(payload, expiresIn) {
     // payload와 secret key, expire time을 인자로 넣어 jwt 토큰 생성
     return jsonwebtoken_1.default.sign(payload, PRIVATE_KEY, { algorithm: "RS256", expiresIn });

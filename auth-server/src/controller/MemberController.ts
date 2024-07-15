@@ -4,6 +4,7 @@ import * as adminData from "../data/Member";
 
 import { createSession } from "../data/userSession";
 import { signJWT } from "../jwt/jwt";
+import crypto from 'crypto';
 
 // 생성 후 insertId를 리턴하도록 설계
 export async function createMember(req: Request, res: Response) {
@@ -39,7 +40,7 @@ export async function getMemberById(req: Request, res: Response) {
 export async function handleUserLogin(req: Request, res: Response, next: NextFunction) {
 
   // user가 입력한 email, password를 변수로 저장
-  const { id, password } = req.body;
+  const { id, password, salt } = req.body;
 
   // email을 통해 user 정보 접근
   const user = await adminData.getMemberById(id);
@@ -48,7 +49,14 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
   // 만약 db에 password와 id 정보가 없다면 401 리턴
   if (!user) {
     return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
-  } else if (user.password !== password) {
+  } 
+  // 입력한 password를 salt와 함께 해시화하여 비교
+  const hashedPassword = crypto
+    .createHash('sha256')
+    .update(salt + password) // 저장된 salt와 입력한 비밀번호를 조합
+    .digest('hex');
+
+  if (user.password !== hashedPassword) {
     return res.status(401).send("비밀번호가 유효하지 않습니다.");
   }
 

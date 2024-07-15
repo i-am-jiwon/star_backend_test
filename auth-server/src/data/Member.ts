@@ -1,12 +1,21 @@
 import { db } from "./database";
 import { PostMember, GetMember } from "../models/User";
 import { RowDataPacket } from 'mysql2';
+import crypto from 'crypto';
 
 export async function createMember(newAdminInfo: PostMember) {
-  const { id, password, salt, name, email, depart, duty, role } = newAdminInfo;
+  const { id, password, salt, name, role } = newAdminInfo;
 
-  const query = "INSERT INTO users (id, password, salt, name, email, depart, duty, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-  const values = [id, password, salt, name, email || null, depart || null, duty || null, role];
+  // Salt 생성
+
+  // 비밀번호 해시화
+  const hashedPassword = crypto
+    .createHash('sha256')
+    .update(salt + password) // salt와 비밀번호를 조합하여 해시화
+    .digest('hex');
+
+  const query = "INSERT INTO users (id, password, salt, name, role) VALUES (?, ?, ?, ?, ?)";
+  const values = [id, hashedPassword, salt, name, role];
 
   try {
     const [result] = await db.execute(query, values);
@@ -17,10 +26,7 @@ export async function createMember(newAdminInfo: PostMember) {
       insertId,
       id,
       name,
-      email,
-      depart,
-      duty,
-      role,
+      role
     };
   } catch (error: any) {
     if (error.code === 'ER_DUP_ENTRY') {
