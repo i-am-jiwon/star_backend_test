@@ -60,7 +60,7 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
     return res.status(401).send("비밀번호가 유효하지 않습니다.");
   }
 
-  // 입력한 email을 통해 session 생성
+  // 입력한 id 통해 session 생성
   const session = createSession(id);
 
   // access token과 refresh token 생성
