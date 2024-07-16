@@ -9,9 +9,6 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
-    ports:
-      - "$3000:3306"
 
   auth-server:
     build:
