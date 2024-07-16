@@ -11,7 +11,10 @@ const authenticateToken = (req, res, next) => {
     var _a;
     const token = (_a = req.headers['authorization']) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ message: 'Authorization token is missing' });
+        return res.status(401).json({
+            status: 401,
+            message: 'Authorization token이 없습니다.'
+        });
     }
     jsonwebtoken_1.default.verify(token, PUBLIC_KEY, (err, decoded) => {
         if (err) {
@@ -32,7 +35,10 @@ const authorizeRole = (minRole) => {
         var _a;
         const userRole = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
         if (userRole === undefined || userRole <= minRole) {
-            return res.status(403).json({ message: 'Forbidden: You do not have the required role' });
+            return res.status(403).json({
+                status: 403,
+                message: '지정한 리소스에 대한 액세스가 금지되었습니다.'
+            });
         }
         next();
     };

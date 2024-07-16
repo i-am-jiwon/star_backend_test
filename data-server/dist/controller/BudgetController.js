@@ -31,15 +31,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBudget = exports.updateBudget = exports.createBudget = exports.getBudgetById = exports.getBudgets = void 0;
 const budgetData = __importStar(require("../data/Budgets"));
+const logger_1 = __importDefault(require("../config/logger")); // 로거 임포트
 const getBudgets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const budgets = yield budgetData.getBudgets();
+        logger_1.default.info('Budgets fetched successfully');
         res.json(budgets);
     }
     catch (error) {
+        if (error instanceof Error) {
+            logger_1.default.error('Error fetching budgets: ' + error.message);
+        }
+        else {
+            logger_1.default.error('Unknown error fetching budgets');
+        }
         res.status(500).json({ error: 'Error fetching budgets' });
     }
 });
@@ -48,13 +59,21 @@ const getBudgetById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const budget = yield budgetData.getBudgetById(Number(req.params.id));
         if (budget) {
+            logger_1.default.info(`Budget with ID ${req.params.id} fetched successfully`);
             res.json(budget);
         }
         else {
+            logger_1.default.warn(`Budget with ID ${req.params.id} not found`);
             res.status(404).json({ error: 'Budget not found' });
         }
     }
     catch (error) {
+        if (error instanceof Error) {
+            logger_1.default.error('Error fetching budget: ' + error.message);
+        }
+        else {
+            logger_1.default.error('Unknown error fetching budget');
+        }
         res.status(500).json({ error: 'Error fetching budget' });
     }
 });
@@ -63,9 +82,16 @@ const createBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const newBudget = req.body;
         yield budgetData.createBudget(newBudget);
+        logger_1.default.info('New budget created successfully');
         res.status(201).json({ message: 'Budget created' });
     }
     catch (error) {
+        if (error instanceof Error) {
+            logger_1.default.error('Error creating budget: ' + error.message);
+        }
+        else {
+            logger_1.default.error('Unknown error creating budget');
+        }
         res.status(500).json({ error: 'Error creating budget' });
     }
 });
@@ -74,19 +100,39 @@ const updateBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const updatedBudget = req.body;
         yield budgetData.updateBudget(Number(req.params.id), updatedBudget);
+        logger_1.default.info(`Budget with ID ${req.params.id} updated successfully`);
         res.json({ message: 'Budget updated' });
     }
     catch (error) {
+        if (error instanceof Error) {
+            logger_1.default.error('Error updating budget: ' + error.message);
+        }
+        else {
+            logger_1.default.error('Unknown error updating budget');
+        }
         res.status(500).json({ error: 'Error updating budget' });
     }
 });
 exports.updateBudget = updateBudget;
 const deleteBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield budgetData.deleteBudget(Number(req.params.id));
+        const budgetId = Number(req.params.id);
+        const budget = yield budgetData.getBudgetById(budgetId);
+        if (!budget) {
+            logger_1.default.warn(`Budget with ID ${budgetId} not found for deletion`);
+            return res.status(404).json({ error: 'Budget not found' });
+        }
+        yield budgetData.deleteBudget(budgetId);
+        logger_1.default.info(`Budget with ID ${budgetId} deleted successfully`);
         res.json({ message: 'Budget deleted' });
     }
     catch (error) {
+        if (error instanceof Error) {
+            logger_1.default.error('Error deleting budget: ' + error.message);
+        }
+        else {
+            logger_1.default.error('Unknown error deleting budget');
+        }
         res.status(500).json({ error: 'Error deleting budget' });
     }
 });

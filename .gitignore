@@ -1,3 +1,7 @@
 node_modules/
 client/node_modules/
 auth-server/node_modules/
+data-server/node_modules/
+
+data-server/DataCombined.log
+data-server/DataError.log
