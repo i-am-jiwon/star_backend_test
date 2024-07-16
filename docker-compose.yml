@@ -14,8 +14,10 @@ services:
     build:
       context: ./auth-server
       dockerfile: Dockerfile
+    volumes:
+      - ./auth-server/src/swagger/Swagger.yaml:/usr/src/app/src/swagger/Swagger.yaml
     environment:
-      DB_HOST: db  
+      DB_HOST: db
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
@@ -28,8 +30,10 @@ services:
     build:
       context: ./data-server
       dockerfile: Dockerfile
+    volumes:
+      - ./swagger.yaml:/usr/src/app/swagger.yaml 
     environment:
-      DB_HOST: db  
+      DB_HOST: db
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}

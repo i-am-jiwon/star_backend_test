@@ -46,11 +46,11 @@ const MainPage = () => {
         try {
             const data = yield (0, api_1.login)(id, password);
             console.log('Login successful:', data);
-            setError('로그인 성공: ');
+            setError('로그인 성공');
         }
         catch (error) {
             if (error.response) {
-                setError('로그인 실패: ' + error.response.data);
+                setError('로그인 실패: ' + error.response.data.message);
             }
             else {
                 setError('로그인 실패: 서버와의 연결에 문제가 있습니다.');
@@ -61,11 +61,12 @@ const MainPage = () => {
         }
     });
     return (react_1.default.createElement("div", null,
-        react_1.default.createElement("h1", null, "Main Page"),
-        react_1.default.createElement("p", null, "This is the main page of the application."),
+        react_1.default.createElement("h1", null, "Front"),
+        react_1.default.createElement("p", null, "login test"),
         error && react_1.default.createElement("p", { style: { color: 'red' } }, error),
         react_1.default.createElement("div", null,
             react_1.default.createElement("input", { type: "text", placeholder: "Enter your ID", value: id, onChange: (e) => setId(e.target.value) }),
+            react_1.default.createElement("br", null),
             react_1.default.createElement("input", { type: "password", placeholder: "Enter your Password", value: password, onChange: (e) => setPassword(e.target.value) }),
             react_1.default.createElement("button", { onClick: handleLogin, disabled: loading }, loading ? 'Logging in...' : 'Login'))));
 };

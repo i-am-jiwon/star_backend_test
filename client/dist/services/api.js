@@ -17,7 +17,7 @@ const axios_1 = __importDefault(require("axios"));
 const API_URL = 'http://localhost:8000'; // 인증 서버 URL
 const login = (id, password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield axios_1.default.post(`${API_URL}/api/login`, { id, password });
+        const response = yield axios_1.default.post(`${API_URL}/api/auth/login`, { id, password });
         return response.data; // 성공적인 응답 반환
     }
     catch (error) {
