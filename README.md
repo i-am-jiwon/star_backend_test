@@ -10,7 +10,8 @@
 - 📌로컬환경에서 Docker Desktop과 같은 Docker 가상화 환경이 필요합니다. (localhost에서 실행)
 
 # 빌드 및 실행 방법
-1. 최상위 프로젝트 폴더 `star_backend_test`에서 다음 명령어를 실행하여 Docker 컨테이너를 빌드하고 실행합니다
+1. 도커 가상화 환경을 실행 한 후 
+최상위 프로젝트 폴더 `star_backend_test`에서 다음 명령어를 실행하여 Docker 컨테이너를 빌드하고 실행
 - `docker-compose up --build -d`
 
 2. DB, 인증 서버, 데이터 서버에 초기 데이터를 삽입하는 데 약 35초 정도 소요됩니다. 
