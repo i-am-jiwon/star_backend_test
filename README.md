@@ -94,5 +94,28 @@
 - 회원가입과 조회, 자료서버에 관한 내용은 없습니다.
 ![image](https://github.com/user-attachments/assets/84a0e5ea-85e2-4780-8d6b-7fb3a12afb4c)
 
+# 로깅 & init data 로직
+### 로깅
+- Winston을 이용한 로그 출력
+- 로그는 따로 파일로 저장되며 error는 따로 또 파일이 저장됩니다. (각 서버마다 로깅 구현)
+![image](https://github.com/user-attachments/assets/086c7f17-aab0-4f47-b4b0-ced3fdba9ae5)
+
+### init data 로직
+- 실행 시 DB의 부팅 시간으로 인해 35초간의 시간을 기다린 후 init data push 로직 구현
+
+```js  
+  app.listen(8000, () => {
+  console.log("====      Auth - Server is On...!!!      ====");
+
+  setTimeout(() => {
+    initData().then(() => {
+      console.log("Initial data inserted.");
+    }).catch((error) => {
+      console.error("Error inserting initial data:", error);
+    });
+  }, 35000); // 35초 대기
+});
+```
+
 
 
