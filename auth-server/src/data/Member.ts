@@ -34,7 +34,7 @@ export async function createMember(newAdminInfo: PostMember) {
     if (error.code === 'ER_DUP_ENTRY') {
       return {
         success: false,
-        message: "Duplicate entry for key 'users.PRIMARY'. This ID is already in use.",
+        message: "이미 존재하는 ID 입니다.",
       };
     }
     throw error; // 다른 오류는 그대로 throw

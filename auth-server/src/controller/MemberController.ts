@@ -6,15 +6,33 @@ import { createSession } from "../data/userSession";
 import { signJWT } from "../jwt/jwt";
 import crypto from 'crypto';
 
-// 생성 후 insertId를 리턴하도록 설계
 export async function createMember(req: Request, res: Response) {
   const newMemberInfo: PostMember = req.body;
-  const result = await memberData.createMember(newMemberInfo);
 
-  if (result.success) {
-    res.status(201).json(result);
-  } else {
-    res.status(409).json({ message: result.message }); // HTTP 409 Conflict 상태 코드 사용
+  if (!newMemberInfo || Object.keys(newMemberInfo).length === 0) {
+    return res.status(400).json({
+      status: 400,
+      message: '비어있는 요청입니다.',
+    }); 
+  }
+
+  try {
+    const result = await memberData.createMember(newMemberInfo);
+
+    if (result.success) {
+      res.status(201).json(result);
+    } else {
+      res.status(409).json({
+        status: 409,
+        message: result.message,
+      }); 
+    }
+  } catch (error) {
+    console.error('Error creating member:', error);
+    res.status(500).json({
+      status: 500,
+      message: 'Internal server error',
+    }); 
   }
 }
 
@@ -32,7 +50,10 @@ export async function getMemberById(req: Request, res: Response) {
   if (user) {
     res.status(200).json(user);
   } else {
-    res.status(404).json({ message: "User not found" });
+    res.status(404).json({
+      status: 404,
+      message: "찾을 수 없는 회원입니다."
+    });
   }
 }
 
@@ -44,7 +65,10 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
 
 
   if (!user) {
-    return res.status(401).send("등록된 아이디가 존재하지 않습니다.");
+    return res.status(401).json({
+      status: 401,
+      message: "등록된 아이디가 없습니다."
+    });
   }
   const hashedPassword = crypto
     .createHash('sha256')
@@ -52,13 +76,16 @@ export async function handleUserLogin(req: Request, res: Response, next: NextFun
     .digest('hex');
 
   if (user.password !== hashedPassword) {
-    return res.status(401).send("비밀번호가 유효하지 않습니다.");
+    return res.status(401).json({
+      status: 401,
+      message: "비밀번호가 일치하지 않습니다."
+    });
   }
 
 
   const accessToken = signJWT({
     id: user.id, role: user.role
-  }, "60s")
+  }, "24h")
 
   const session = createSession(id, accessToken);
 

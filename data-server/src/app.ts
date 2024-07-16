@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: false }));
 
 
 // 비품 및 예산 라우트 설정
-app.use('/api/supplies', supplyRoutes);
-app.use('/api/budgets', budgetRoutes);
+app.use('/api/data', supplyRoutes);
+app.use('/api/data', budgetRoutes);
 
 
 app.listen(8001, () => {

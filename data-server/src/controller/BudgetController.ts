@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import * as budgetData from "../data/Budgets";
 
+import logger from '../config/logger'; // 로거 임포트
+
+
 export const getBudgets = async (req: Request, res: Response) => {
     try {
         const budgets = await budgetData.getBudgets();
