@@ -19,11 +19,10 @@ const logger = winston.createLogger({
         new winston.transports.Console(),
 
         // 파일로 로그 출력
-        new winston.transports.File({ filename: path.join(__dirname, '../../Log/DataError.log'), level: 'error' }),
-        new winston.transports.File({ filename: path.join(__dirname, '../../Log/DataCombined.log') })
+        new winston.transports.File({ filename: path.join(__dirname, '../../Log/AuthError.log'), level: 'error' }),
+        new winston.transports.File({ filename: path.join(__dirname, '../../Log/AuthCombined.log') })
     ]
 });
-
 
 
 export default logger;
