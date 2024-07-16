@@ -11,7 +11,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - "${DB_PORT}:3306"
+      - "$3000:3306"
 
   auth-server:
     build:

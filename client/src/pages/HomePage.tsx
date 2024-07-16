@@ -18,7 +18,7 @@ const MainPage: React.FC = () => {
       setError('로그인 성공');
     } catch (error: any) {
       if (error.response) {
-        setError('로그인 실패: ' + error.response.data);
+        setError('로그인 실패: ' + error.response.data.message);
       } else {
         setError('로그인 실패: 서버와의 연결에 문제가 있습니다.');
       }
