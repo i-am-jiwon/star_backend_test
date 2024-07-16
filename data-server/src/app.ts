@@ -2,7 +2,7 @@ import express from 'express';
 import cors from "cors";
 import supplyRoutes from './routes/Data';
 import budgetRoutes from './routes/Data';
-import initData from "./initData"; 
+import initData from "./initData";
 
 const app = express();
 app.use(cors()); // Enable CORS for all origins
@@ -14,13 +14,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/data', supplyRoutes);
 app.use('/api/data', budgetRoutes);
 
-initData().then(() => {
-    console.log("Initial data inserted.");
-  }).catch((error) => {
-    console.error("Error inserting initial data:", error);
-  });
-  
-
 app.listen(8001, () => {
     console.log("====      Data - Server is On...!!!      ====");
+
+    setTimeout(() => {
+        initData().then(() => {
+            console.log("Initial data inserted.");
+        }).catch((error) => {
+            console.error("Error inserting initial data:", error);
+        });
+    }, 35000); // 35초 대기
 });

@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import memberRouter from "./routes/Member";
-import initData from "./initData"; 
+import initData from "./initData";
 
 
 const app = express();
@@ -12,12 +12,14 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/auth", memberRouter);
 
-initData().then(() => {
-  console.log("Initial data inserted.");
-}).catch((error) => {
-  console.error("Error inserting initial data:", error);
-});
-
 app.listen(8000, () => {
   console.log("====      Auth - Server is On...!!!      ====");
+
+  setTimeout(() => {
+    initData().then(() => {
+      console.log("Initial data inserted.");
+    }).catch((error) => {
+      console.error("Error inserting initial data:", error);
+    });
+  }, 35000); // 35초 대기
 });
