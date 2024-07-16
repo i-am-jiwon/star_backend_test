@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBudget = exports.updateBudget = exports.createBudget = exports.getBudgetById = exports.getBudgets = void 0;
 const budgetData = __importStar(require("../data/Budgets"));
-const logger_1 = __importDefault(require("../config/logger")); // 로거 임포트
+const logger_1 = __importDefault(require("../config/logger"));
 const getBudgets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const budgets = yield budgetData.getBudgets();
@@ -51,7 +51,10 @@ const getBudgets = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         else {
             logger_1.default.error('Unknown error fetching budgets');
         }
-        res.status(500).json({ error: 'Error fetching budgets' });
+        res.status(500).json({
+            status: 500,
+            error: 'Error fetching budgets'
+        });
     }
 });
 exports.getBudgets = getBudgets;
@@ -64,7 +67,10 @@ const getBudgetById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         else {
             logger_1.default.warn(`Budget with ID ${req.params.id} not found`);
-            res.status(404).json({ error: 'Budget not found' });
+            res.status(404).json({
+                status: 404,
+                error: 'Budget not found'
+            });
         }
     }
     catch (error) {
@@ -74,7 +80,10 @@ const getBudgetById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         else {
             logger_1.default.error('Unknown error fetching budget');
         }
-        res.status(500).json({ error: 'Error fetching budget' });
+        res.status(500).json({
+            status: 500,
+            error: 'Error fetching budget'
+        });
     }
 });
 exports.getBudgetById = getBudgetById;
@@ -83,7 +92,7 @@ const createBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const newBudget = req.body;
         yield budgetData.createBudget(newBudget);
         logger_1.default.info('New budget created successfully');
-        res.status(201).json({ message: 'Budget created' });
+        res.status(201).json({ message: 'New Budget created' });
     }
     catch (error) {
         if (error instanceof Error) {
@@ -92,7 +101,7 @@ const createBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         else {
             logger_1.default.error('Unknown error creating budget');
         }
-        res.status(500).json({ error: 'Error creating budget' });
+        res.status(500).json({ status: 500, error: 'Error creating budget' });
     }
 });
 exports.createBudget = createBudget;
@@ -101,7 +110,7 @@ const updateBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const updatedBudget = req.body;
         yield budgetData.updateBudget(Number(req.params.id), updatedBudget);
         logger_1.default.info(`Budget with ID ${req.params.id} updated successfully`);
-        res.json({ message: 'Budget updated' });
+        res.json({ message: `${req.params.id}Budget updated` });
     }
     catch (error) {
         if (error instanceof Error) {
@@ -110,7 +119,7 @@ const updateBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         else {
             logger_1.default.error('Unknown error updating budget');
         }
-        res.status(500).json({ error: 'Error updating budget' });
+        res.status(500).json({ status: 500, error: 'Error updating budget' });
     }
 });
 exports.updateBudget = updateBudget;
@@ -119,12 +128,12 @@ const deleteBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const budgetId = Number(req.params.id);
         const budget = yield budgetData.getBudgetById(budgetId);
         if (!budget) {
-            logger_1.default.warn(`Budget with ID ${budgetId} not found for deletion`);
-            return res.status(404).json({ error: 'Budget not found' });
+            logger_1.default.warn(`Budget with ID ${budgetId} not found`);
+            return res.status(404).json({ status: 404, error: `ID - ${budgetId} Budget not found` });
         }
         yield budgetData.deleteBudget(budgetId);
         logger_1.default.info(`Budget with ID ${budgetId} deleted successfully`);
-        res.json({ message: 'Budget deleted' });
+        res.json({ message: `${budgetId}Budget deleted` });
     }
     catch (error) {
         if (error instanceof Error) {
@@ -133,7 +142,7 @@ const deleteBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         else {
             logger_1.default.error('Unknown error deleting budget');
         }
-        res.status(500).json({ error: 'Error deleting budget' });
+        res.status(500).json({ status: 500, error: 'Error deleting budget' });
     }
 });
 exports.deleteBudget = deleteBudget;

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const winston_1 = __importDefault(require("winston"));
+const path_1 = __importDefault(require("path"));
 // 로그 형식 지정
 const { combine, timestamp, printf } = winston_1.default.format;
 const logFormat = printf(({ level, message, timestamp }) => {
@@ -17,8 +18,8 @@ const logger = winston_1.default.createLogger({
         // 콘솔로 로그 출력
         new winston_1.default.transports.Console(),
         // 파일로 로그 출력
-        new winston_1.default.transports.File({ filename: 'DataError.log', level: 'error' }),
-        new winston_1.default.transports.File({ filename: 'DataCombined.log' })
+        new winston_1.default.transports.File({ filename: path_1.default.join(__dirname, '../../Log/DataError.log'), level: 'error' }),
+        new winston_1.default.transports.File({ filename: path_1.default.join(__dirname, '../../Log/DataCombined.log') })
     ]
 });
 // 개발 환경에서는 디버그 로그도 콘솔에 출력

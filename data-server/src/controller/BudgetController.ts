@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as budgetData from "../data/Budgets";
-import logger from '../config/logger'; // 로거 임포트
+import logger from '../config/logger';
+
 
 export const getBudgets = async (req: Request, res: Response) => {
     try {
@@ -13,7 +14,10 @@ export const getBudgets = async (req: Request, res: Response) => {
         } else {
             logger.error('Unknown error fetching budgets');
         }
-        res.status(500).json({ error: 'Error fetching budgets' });
+        res.status(500).json({
+            status: 500,
+            error: 'Error fetching budgets'
+        });
     }
 };
 
@@ -25,7 +29,10 @@ export const getBudgetById = async (req: Request, res: Response) => {
             res.json(budget);
         } else {
             logger.warn(`Budget with ID ${req.params.id} not found`);
-            res.status(404).json({ error: 'Budget not found' });
+            res.status(404).json({
+                status: 404,
+                error: 'Budget not found'
+            });
         }
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -33,7 +40,10 @@ export const getBudgetById = async (req: Request, res: Response) => {
         } else {
             logger.error('Unknown error fetching budget');
         }
-        res.status(500).json({ error: 'Error fetching budget' });
+        res.status(500).json({
+            status: 500,
+            error: 'Error fetching budget'
+        });
     }
 };
 
@@ -42,14 +52,14 @@ export const createBudget = async (req: Request, res: Response) => {
         const newBudget = req.body;
         await budgetData.createBudget(newBudget);
         logger.info('New budget created successfully');
-        res.status(201).json({ message: 'Budget created' });
+        res.status(201).json({ message: 'New Budget created' });
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error('Error creating budget: ' + error.message);
         } else {
             logger.error('Unknown error creating budget');
         }
-        res.status(500).json({ error: 'Error creating budget' });
+        res.status(500).json({ status: 500, error: 'Error creating budget' });
     }
 };
 
@@ -58,14 +68,14 @@ export const updateBudget = async (req: Request, res: Response) => {
         const updatedBudget = req.body;
         await budgetData.updateBudget(Number(req.params.id), updatedBudget);
         logger.info(`Budget with ID ${req.params.id} updated successfully`);
-        res.json({ message: 'Budget updated' });
+        res.json({ message: `${req.params.id}Budget updated` });
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error('Error updating budget: ' + error.message);
         } else {
             logger.error('Unknown error updating budget');
         }
-        res.status(500).json({ error: 'Error updating budget' });
+        res.status(500).json({ status: 500, error: 'Error updating budget' });
     }
 };
 
@@ -75,19 +85,19 @@ export const deleteBudget = async (req: Request, res: Response) => {
         const budget = await budgetData.getBudgetById(budgetId);
 
         if (!budget) {
-            logger.warn(`Budget with ID ${budgetId} not found for deletion`);
-            return res.status(404).json({ error: 'Budget not found' });
+            logger.warn(`Budget with ID ${budgetId} not found`);
+            return res.status(404).json({ status: 404, error: `ID - ${budgetId} Budget not found` });
         }
 
         await budgetData.deleteBudget(budgetId);
         logger.info(`Budget with ID ${budgetId} deleted successfully`);
-        res.json({ message: 'Budget deleted' });
+        res.json({ message: `${budgetId}Budget deleted` });
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error('Error deleting budget: ' + error.message);
         } else {
             logger.error('Unknown error deleting budget');
         }
-        res.status(500).json({ error: 'Error deleting budget' });
+        res.status(500).json({ status: 500, error: 'Error deleting budget' });
     }
 };
