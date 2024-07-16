@@ -23,6 +23,13 @@ components:
           type: string
         amount:
           type: number
+    PostBudget:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: number
     Supply:
       type: object
       properties:
@@ -30,7 +37,14 @@ components:
           type: integer
         name:
           type: string
-        quantity:
+        price:
+          type: integer
+    PostSupply:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
           type: integer
 
 security:
@@ -67,7 +81,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Budget'
+              $ref: '#/components/schemas/PostBudget'
       responses:
         201:
           description: New budget created successfully
@@ -172,7 +186,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Supply'
+              $ref: '#/components/schemas/PostSupply'
       responses:
         201:
           description: New supply created successfully
