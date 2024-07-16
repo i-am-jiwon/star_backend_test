@@ -26,12 +26,16 @@
 
 # 아키텍처 구성도
 
-![image](https://gist.github.com/user-attachments/assets/5b5a87e9-f680-4d0c-bec9-0789123b510f)
+![image](https://github.com/user-attachments/assets/926d4248-a48e-4af0-aac0-89445c11d6b2)
+
 
 # 엔드포인트 설명
 ## Auth-server(인증서버) - localhost:8000
 ### 📌서버 실행시 `http://localhost:8000/api-docs/` 에서 Swagger로 테스트 가능합니다. 
-![image](https://gist.github.com/user-attachments/assets/3e4737a8-2d24-482e-8472-7bc69e9b052f)
+![image](https://github.com/user-attachments/assets/7fb6755f-9d68-42ba-9a49-5cbb17b27434)
+
+
+
 
 #### GET /api/auth/member
 - 설명: 모든 회원 정보 가져오기
@@ -51,12 +55,14 @@
 ### 📌자료서버는 토큰이 필요해 Authorize에 로그인 시 반환되는 토큰을 넣어야 작동합니다.
 > **<로그인시 반환하는 accessToken의 값>**
 
-![image](https://gist.github.com/user-attachments/assets/a780518b-539f-4e34-a0d8-5d5537979aff)
+![image](https://github.com/user-attachments/assets/43b6e389-cc1d-4608-a6b5-d4473bdecf9b)
+
 
 
 > **<인증키 넣는 곳>**
 
-![image](https://gist.github.com/user-attachments/assets/0b130ade-a475-4cff-b5f2-e8fbe3d590b0)
+![image](https://github.com/user-attachments/assets/ae53e1b7-c884-40bb-a697-302abea00f9c)
+
 
 
 ### 예산 관련 엔드포인트
